@@ -8,6 +8,13 @@
       "type": "java",
       "name": "Launch Main",
       "request": "launch",
+      "mainClass": "frc.robot.Main",
+      "projectName": "SkillsChallengeCode"
+    },
+    {
+      "type": "java",
+      "name": "Launch Main",
+      "request": "launch",
       "mainClass": "frc.team3467.robot2021.Main",
       "projectName": "Skip-5.11"
     },
