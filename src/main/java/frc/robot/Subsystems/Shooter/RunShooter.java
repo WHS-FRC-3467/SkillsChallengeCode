@@ -11,12 +11,7 @@ public class RunShooter extends CommandBase{
     {
         m_shooter = shooterSubsys;
         m_targetVelocity = targetVelocity;
-    }
-
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize()
-    {
+        addRequirements(m_shooter);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -30,9 +25,8 @@ public class RunShooter extends CommandBase{
     @Override
     public void end(boolean isFinished)
     {
-//         m_shooter.runShooter(0.0);
+         m_shooter.runShooter(0.0);
     }
-
 
     // Returns true when the command should end.
     @Override

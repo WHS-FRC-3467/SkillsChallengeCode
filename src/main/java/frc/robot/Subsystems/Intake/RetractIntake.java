@@ -13,6 +13,7 @@ public class RetractIntake extends InstantCommand {
   IntakeSubsystem m_intake;
   public RetractIntake(IntakeSubsystem intakeSubsystem) {
     m_intake = intakeSubsystem;
+    addRequirements(m_intake);
   }
 
   // Called when the command is initially scheduled.

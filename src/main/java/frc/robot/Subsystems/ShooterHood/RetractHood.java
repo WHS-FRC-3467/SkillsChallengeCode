@@ -13,8 +13,8 @@ public class RetractHood extends InstantCommand {
   ShooterHoodSubsystem m_hood;
   
   public RetractHood(ShooterHoodSubsystem shooterHoodSubsystem) {
-    super();
     m_hood = shooterHoodSubsystem;
+    addRequirements(m_hood);
   }
 
   // Called once when the command executes

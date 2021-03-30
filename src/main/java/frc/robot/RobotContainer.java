@@ -9,6 +9,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Subsystems.BallTower.BallTowerSubsystem;
 import frc.robot.Subsystems.BallTower.RunBallTower;
+import frc.robot.Subsystems.CommandGroups.ProcessBalls;
 import frc.robot.Subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.Subsystems.DriveSubsystem.SplitArcadeDrive;
 import frc.robot.Subsystems.Intake.DeployIntake;
@@ -58,7 +59,12 @@ public class RobotContainer {
         m_robotDrive.setDefaultCommand(
           new SplitArcadeDrive(m_robotDrive, 
                               () -> m_driverController.getLeftY(),
-                              () -> m_driverController.getRightX()));     
+                              () -> m_driverController.getRightX()));    
+        new ProcessBalls(
+          m_intake, m_operatorController.getLeftY(),/*Multiply by decimal if needed to reduce speed*/
+          m_vHopper, m_operatorController.getLeftY(),/*Multiply by decimal if needed to reduce speed*/
+          m_ballTower, m_operatorController.getLeftY()/*Multiply by decimal if needed to reduce speed*/
+        );
   }
 
   /**

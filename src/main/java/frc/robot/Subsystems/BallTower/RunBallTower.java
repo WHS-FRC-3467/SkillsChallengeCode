@@ -4,18 +4,19 @@
 
 package frc.robot.Subsystems.BallTower;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class RunBallTower extends InstantCommand {
+public class RunBallTower extends CommandBase {
     /** Creates a new RunBallTower. */
     BallTowerSubsystem m_ballTower;
     Double m_speed;
     public RunBallTower(BallTowerSubsystem ballTowerSubsystem, double speed) {
       m_speed = speed;
       m_ballTower = ballTowerSubsystem;
+      addRequirements(m_ballTower);
     }
   
 
@@ -23,5 +24,15 @@ public class RunBallTower extends InstantCommand {
   @Override
   public void initialize() {
     m_ballTower.runBallTower(m_speed);
+  }
+  @Override
+  public void end(boolean interrupted) {
+    m_ballTower.runBallTower(0.0);
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
   }
 }

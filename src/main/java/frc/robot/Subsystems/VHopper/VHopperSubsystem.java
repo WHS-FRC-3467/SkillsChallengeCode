@@ -23,6 +23,4 @@ public class VHopperSubsystem extends SubsystemBase {
   public void runVHopper(Double speed) {
     m_vHopper1.set(ControlMode.PercentOutput, speed);
   }
-
-
 }

@@ -10,9 +10,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class RunIntake extends CommandBase {
   IntakeSubsystem m_intake;
   Double m_speed;
+
   public RunIntake(IntakeSubsystem intakeSubsystem, Double speed) {
     m_intake = intakeSubsystem;
     m_speed = speed;
+    addRequirements(m_intake);
   }
 
   // Called when the command is initially scheduled.
