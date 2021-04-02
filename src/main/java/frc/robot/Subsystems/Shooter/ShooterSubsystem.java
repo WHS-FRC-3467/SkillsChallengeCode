@@ -5,115 +5,50 @@
 package frc.robot.Subsystems.Shooter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.CanConstants;
-import frc.robot.Constants.GainsConstants;
+import frc.robot.Gains;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
-  /** Creates a new ShooterSubsystem. */
-    /* Hardware */
-    TalonFX m_motor1 = new TalonFX(CanConstants.shooterMotor1);
-    TalonFX m_motor2 = new TalonFX(CanConstants.shooterMotor2);
-
-    /* Gains */
-    double m_kP = 0.0;
-    double m_kI = 0.0;
-    double m_kD = 0.0;
-    double m_kF = 0.0;
-
+    Gains m_speedGains;
+    FalconVelocity m_speedControl;
+    public ShooterSubsystem m_shooter;
+    
+    
     public ShooterSubsystem()
     {
-
-        /* Factory Default all hardware to prevent unexpected behaviour */
-        m_motor1.configFactoryDefault();
-        m_motor2.configFactoryDefault();
-
-        /* Config sensor used for Primary PID [m_Velocity] */
-        m_motor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30);
-
-        m_motor1.configClosedloopRamp(0.3);
-        m_motor2.configClosedloopRamp(0.3);        
+            m_speedControl = new FalconVelocity();
+            m_speedGains = ShooterConstants.kGains_Falcon;
         
-        /*
-		 * Phase sensor accordingly. 
-         * Positive Sensor Reading should match Green (blinm_king) Leds on Talon
-         */
-		m_motor1.setSensorPhase(false);
-		m_motor2.setSensorPhase(false);
-		
-		/* Config the peak and nominal outputs */
-		m_motor1.configNominalOutputForward(0.0, 30);
-		m_motor1.configNominalOutputReverse(0.0, 30);
-		m_motor1.configPeakOutputForward(1.0, 30);
-		m_motor1.configPeakOutputReverse(0.0, 30); // Don't go in reverse
+        /* Initialize Smart Dashboard display */
+        SmartDashboard.putNumber("P Gain", m_speedGains.kP);
+        SmartDashboard.putNumber("Feed Forward", m_speedGains.kF);
 
-		m_motor2.configNominalOutputForward(0.0, 30);
-		m_motor2.configNominalOutputReverse(0.0, 30);
-		m_motor2.configPeakOutputForward(1.0, 30);
-		m_motor2.configPeakOutputReverse(0.0, 30); // Don't go in reverse
+        SmartDashboard.putNumber("Current Velocity", 0);
+        SmartDashboard.putNumber("Current Output Percent", 0);
+        SmartDashboard.putNumber("Velocity Error", 0);
 
-        /* Invert motor2 and have it follow motor1 */
-        m_motor2.follow(m_motor1);
     }
 
-    public void updateGains(double kP, double kI, double kD, double kF)
-    {
-        // if PIDF coefficients have changed, write new values to controller
-        if((m_kP != kP)) { m_motor1.config_kP(0, kP, 30); m_kP = kP; }
-        if((m_kI != kI)) { m_motor1.config_kI(0, kI, 30); m_kI = kI; }
-        if((m_kD != kD)) { m_motor1.config_kD(0, kD, 30); m_kD = kD; }
-        if((m_kF != kF)) { m_motor1.config_kF(0, kF, 30); m_kF = kF; }
-    }
-
-    public int runVelocityPIDF(double targetVelocity)
-    {
-        // Convert RPM to raw units per 100ms
-        double targetVelocity_UnitsPer100ms = targetVelocity * 2048 / 600;
-                
-        // Set Velocity setpoint
-        m_motor1.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
-
-        // Get current speed and convert back to RPM
-        return (int)((double)m_motor1.getSelectedSensorVelocity() * 600 / 2048);
-    }
-
-    public int getError()
-    {
-        return m_motor1.getClosedLoopError();
-    }
-
-    public double getOutputPercent()
-    {
-		return (m_motor1.getMotorOutputPercent() * 100);
-    }
-
-    public void stop()
-    {
-        m_motor1.set(ControlMode.PercentOutput, 0.0);
-    }
+    /*
+     *
+     *  Shooter Wheel control
+     * 
+     */
 
     /**
-     * void runShooter() - run the shooter at the speed commanded
+     * void runTracking() - run Shooter Wheel at speed commanded by Limelight tracking
      */
-    public void runShooter(double targetVelocity)
+    public void runTracking()
     {
-        if (targetVelocity == 0.0)
-        {
-            stopShooter();
-            return;
-        } 
+        // Get desired velocity from LimeLight tracking
+        double targetVelocity = 0.0; // TO DO: Implement Limelight distance->RPM determination
 
-        //Update gains on the controller from the constants
-        updateGains(GainsConstants.kP, GainsConstants.kI, GainsConstants.kD, GainsConstants.kF);
-
-        //Runs the shooter after gains are updated
-        runVelocityPIDF(targetVelocity);
+        runShooter(targetVelocity);
     }
-    
+
     /**
      * boolean isWheelAtSpeed() - return TRUE when wheel is equal to target, or within tolerance
      *
@@ -121,7 +56,41 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public boolean isWheelAtSpeed()
     {
-        return (Math.abs(getError()) <= ShooterConstants.kShooterTolerance) && (getOutputPercent() != 0);
+        return (Math.abs(m_speedControl.getError()) <= ShooterConstants.kShooterTolerance) && (m_speedControl.getOutputPercent() != 0);
+    }
+
+    /**
+     * void runShooter() - run the shooter at the speed commanded
+     */
+    public void runShooter(double targetVelocity)
+    {
+        
+        if (targetVelocity == 0.0)
+        {
+            stopShooter();
+            SmartDashboard.putNumber("Current Velocity", 0.0);
+            return;
+        }    
+        
+        // Show the commanded velocity on the SmartDashboard
+        //SmartDashboard.putNumber("Target Velocity", targetVelocity);
+
+        // read PID coefficients from SmartDashboard
+        double kP = SmartDashboard.getNumber("P Gain", 0);
+        double kI = SmartDashboard.getNumber("I Gain", 0);
+        double kD = SmartDashboard.getNumber("D Gain", 0);
+        double kF = SmartDashboard.getNumber("Feed Forward", 0);
+
+        // Update gains on the controller
+        m_speedControl.updateGains(kP, kI, kD, kF);
+
+        // Update the target velocity and get back the current velocity
+        int currentVelocity = m_speedControl.runVelocityPIDF(targetVelocity);
+
+        // Show the Current Velocity, Error, and Current Output Percent on the SDB
+        SmartDashboard.putNumber("Current Velocity", currentVelocity);
+        SmartDashboard.putNumber("Error", m_speedControl.getError());
+        SmartDashboard.putNumber("Current Output Percent", m_speedControl.getOutputPercent());
     }
 
     /**
@@ -129,7 +98,7 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void stopShooter()
     {
-        m_motor1.set(ControlMode.PercentOutput, 0.0);
+        m_speedControl.m_motor1.set(ControlMode.PercentOutput, 0.0);
     }
 
 }

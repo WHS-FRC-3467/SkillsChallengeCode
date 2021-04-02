@@ -24,5 +24,9 @@ public class ShooterHoodSubsystem extends SubsystemBase {
   {
       m_hood.set(Value.kReverse);
   }
+  public boolean isHoodDeployed()
+  {
+      return m_hood.get() == Value.kForward;
+  }
 
 }
