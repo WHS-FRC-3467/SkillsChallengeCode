@@ -13,7 +13,7 @@ public class RunBallTower extends CommandBase {
     /** Creates a new RunBallTower. */
     BallTowerSubsystem m_ballTower;
     Double m_speed;
-    public RunBallTower(BallTowerSubsystem ballTowerSubsystem, double speed) {
+    public RunBallTower(BallTowerSubsystem ballTowerSubsystem, Double speed) {
       m_speed = speed;
       m_ballTower = ballTowerSubsystem;
       addRequirements(m_ballTower);
@@ -22,8 +22,8 @@ public class RunBallTower extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_ballTower.runBallTower(m_speed);
+  public void execute() {
+      m_ballTower.runBallTower(m_speed);
   }
   @Override
   public void end(boolean interrupted) {

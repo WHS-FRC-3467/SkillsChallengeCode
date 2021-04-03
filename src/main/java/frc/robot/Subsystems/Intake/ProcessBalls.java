@@ -5,13 +5,15 @@
 package frc.robot.Subsystems.Intake;
 
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RunIntake extends CommandBase {
+public class ProcessBalls extends CommandBase {
   IntakeSubsystem m_intake;
-  Double m_speed;
+  DoubleSupplier m_speed;
 
-  public RunIntake(IntakeSubsystem intakeSubsystem, Double speed) {
+  public ProcessBalls(IntakeSubsystem intakeSubsystem, DoubleSupplier speed) {
     m_intake = intakeSubsystem;
     m_speed = speed;
     addRequirements(m_intake);
@@ -24,7 +26,8 @@ public class RunIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.driveIntake(m_speed);
+    m_intake.driveIntake(m_speed.getAsDouble());
+    m_intake.driveVHopper(m_speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

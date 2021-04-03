@@ -8,19 +8,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Subsystems.BallTower.BallTowerSubsystem;
+import frc.robot.Subsystems.BallTower.RunBallTower;
 import frc.robot.Subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.Subsystems.DriveSubsystem.SplitArcadeDrive;
 import frc.robot.Subsystems.Intake.DeployIntake;
 import frc.robot.Subsystems.Intake.IntakeSubsystem;
+import frc.robot.Subsystems.Intake.ProcessBalls;
 import frc.robot.Subsystems.Intake.RetractIntake;
-import frc.robot.Subsystems.MultiSubsystem.ProcessBalls;
-import frc.robot.Subsystems.MultiSubsystem.ShootBall;
+import frc.robot.Subsystems.Shooter.DeployHood;
+import frc.robot.Subsystems.Shooter.RetractHood;
 import frc.robot.Subsystems.Shooter.RunShooter;
 import frc.robot.Subsystems.Shooter.ShooterSubsystem;
-import frc.robot.Subsystems.ShooterHood.DeployHood;
-import frc.robot.Subsystems.ShooterHood.RetractHood;
-import frc.robot.Subsystems.ShooterHood.ShooterHoodSubsystem;
-import frc.robot.Subsystems.VHopper.VHopperSubsystem;
 import frc.robot.control.XBoxControllerDPad;
 import frc.robot.control.XboxController;
 import frc.robot.control.XboxControllerButton;
@@ -37,10 +35,8 @@ public class RobotContainer {
 
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final IntakeSubsystem m_intake = new IntakeSubsystem();
-  private final VHopperSubsystem m_vHopper = new VHopperSubsystem();
   private final BallTowerSubsystem m_ballTower = new BallTowerSubsystem();
-   private final ShooterSubsystem m_shooter = new ShooterSubsystem();
-  private final ShooterHoodSubsystem m_shooterHood = new ShooterHoodSubsystem();
+  private final ShooterSubsystem m_shooter = new ShooterSubsystem();
 
   public static XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   public static XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
@@ -52,16 +48,15 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-        //Driver Controller
-        //Split Arcade: forward/back leftY, right/left rightX
-        m_robotDrive.setDefaultCommand(
-          new SplitArcadeDrive(m_robotDrive, 
-                              () -> m_driverController.getLeftY(),
-                              () -> m_driverController.getRightX()));   
+    // Driver Controller
+    // Split Arcade: forward/back leftY, right/left rightX
+    m_robotDrive.setDefaultCommand(
+        new SplitArcadeDrive(m_robotDrive, 
+                            () -> m_driverController.getLeftY(), 
+                            () -> m_driverController.getRightX()));
 
-        //runs intake and Vhopper on trigger
-        new ProcessBalls(
-            m_vHopper, m_intake, () -> m_operatorController.getLeftTrigger());
+    m_intake.setDefaultCommand(new ProcessBalls(m_intake, 
+                                                () -> m_operatorController.getLeftTrigger()));
   }
 
   /**
@@ -83,36 +78,18 @@ public class RobotContainer {
  
         //Opperator Controller
 
-        // //green
-        // new XboxControllerButton(m_operatorController, XboxController.Button.kA)
-        // .whenPressed(new ShootBall(m_ballTower, m_shooter, m_shooterHood, false, ShooterConstants.GreenVelocity));
-
-        //yellow
-        new XboxControllerButton(m_operatorController, XboxController.Button.kB)
-        .whenPressed(new ShootBall(m_ballTower, m_shooter, m_shooterHood, false, ShooterConstants.YellowVelocity));
-
-        //blue
-        new XboxControllerButton(m_operatorController, XboxController.Button.kB)
-        .whenPressed(new ShootBall(m_ballTower, m_shooter, m_shooterHood, false, ShooterConstants.BlueVelocity));
-
-        //Red
-        new XboxControllerButton(m_operatorController, XboxController.Button.kB)
-        .whenPressed(new ShootBall(m_ballTower, m_shooter, m_shooterHood, false, ShooterConstants.RedVelocity));
-        
         //runs shooter at test velocity
         new XboxControllerButton(m_operatorController, XboxController.Button.kA)
         .whileHeld(new RunShooter(m_shooter, ShooterConstants.kTestVelocity)); 
-
-        //Deploys Hood
-        new XBoxControllerDPad(m_operatorController, XboxController.DPad.kDPadUp)
-        .whenActive(new DeployHood(m_shooterHood)); 
-
-        //Retracts Hood
-        new XBoxControllerDPad(m_operatorController, XboxController.DPad.kDPadUp)
-        .whenActive(new RetractHood(m_shooterHood)); 
-
-
         
+        new XboxControllerButton(m_operatorController, XboxController.Button.kBumperRight)
+        .whenPressed(new RunBallTower(m_ballTower, 70.0));
+        
+	    	new XBoxControllerDPad(m_operatorController, XboxController.DPad.kDPadUp)
+        .whileActiveOnce(new DeployHood(m_shooter)); 
+        
+	    	new XBoxControllerDPad(m_operatorController, XboxController.DPad.kDPadUp)
+        .whileActiveOnce(new RetractHood(m_shooter)); 
   }
 
   /**

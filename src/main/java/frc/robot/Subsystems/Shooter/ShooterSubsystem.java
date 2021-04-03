@@ -6,8 +6,11 @@ package frc.robot.Subsystems.Shooter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Gains;
 import frc.robot.Constants.ShooterConstants;
 
@@ -16,11 +19,13 @@ public class ShooterSubsystem extends SubsystemBase {
     FalconVelocity m_speedControl;
     public ShooterSubsystem m_shooter;
     
+    private DoubleSolenoid m_hood = new DoubleSolenoid(Constants.PneumaticConstants.kHoodDeploy, Constants.PneumaticConstants.kHoodRetract);
+
     
     public ShooterSubsystem()
     {
-            m_speedControl = new FalconVelocity();
-            m_speedGains = ShooterConstants.kGains_Falcon;
+        m_speedControl = new FalconVelocity();
+        m_speedGains = ShooterConstants.kGains_Falcon;
         
         /* Initialize Smart Dashboard display */
         SmartDashboard.putNumber("P Gain", m_speedGains.kP);
@@ -99,6 +104,21 @@ public class ShooterSubsystem extends SubsystemBase {
     public void stopShooter()
     {
         m_speedControl.m_motor1.set(ControlMode.PercentOutput, 0.0);
+    }
+
+        //Puts hood into use position
+    public void deployHood()
+    {
+        m_hood.set(Value.kForward);
+    }
+    //Puts hood into store position
+    public void retractHood() 
+    {
+        m_hood.set(Value.kReverse);
+    }
+    public boolean isHoodDeployed()
+    {
+        return m_hood.get() == Value.kForward;
     }
 
 }
