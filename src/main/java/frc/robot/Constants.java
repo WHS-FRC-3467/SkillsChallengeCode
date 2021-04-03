@@ -53,16 +53,21 @@ public final class Constants {
                 (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR;
     }
     public static final class OIConstants{
-        public static final int kDriverControllerPort = 1;
-        public static final int kOperatorControllerPort = 0;
+        public static final int kDriverControllerPort = 0;
+        public static final int kOperatorControllerPort = 1;
     }
     public static final class ShooterConstants{
     // Shooter Velocity Tolerance
         public static final int kShooterTolerance = 300;
         public static final Gains kGains_Falcon = new Gains( 0.25, 0.0, 0.0, 0.0475, 0,  1.00);
-        
+		
         //Velocities used for shooter
-		public static double kTestVelocity = 1000;
+        public static double kTestVelocity = 1000;
+        
+        public static final Double GreenVelocity = null;
+		public static final Double YellowVelocity = null;
+		public static final Double BlueVelocity = null;
+		public static final Double RedVelocity = null; 
     }
     public static final class PneumaticConstants {
         //Intake Pistons
@@ -70,8 +75,10 @@ public final class Constants {
         public static final int kIntakePistonDeploy = 1;   
 
         //Pneumatic Constants
-        public static final int kHoodRetract = 2;
-        public static final int kHoodDeploy = 3;
+        public static final int kHoodRetract = 5;
+            //Retracted means that the shooter hood touches the shooter path
+        public static final int kHoodDeploy = 4;
+            //Deployed means that the shooter hood is away from the shooter path
 
     }
     public static final class GainsConstants{
