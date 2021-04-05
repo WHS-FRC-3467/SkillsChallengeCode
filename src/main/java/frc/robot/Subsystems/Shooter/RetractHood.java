@@ -14,7 +14,6 @@ public class RetractHood extends InstantCommand {
   public RetractHood(ShooterSubsystem shooter) {
     shooter = m_shooter;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_shooter);
   }
 
   // Called when the command is initially scheduled.

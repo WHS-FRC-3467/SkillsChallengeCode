@@ -19,13 +19,18 @@ public class RunShooter extends CommandBase{
     public void execute()
     {
         m_shooter.runShooter(m_targetVelocity);
+        // if(m_shooter.isWheelAtSpeed()){
+        //     m_shooter.runBallTower(50.0);
+        // }    
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean isFinished)
     {
-         m_shooter.runShooter(0.0);
+        m_shooter.runShooter(0.0);
+        m_shooter.runBallTower(0.0);
+        
     }
 
     // Returns true when the command should end.

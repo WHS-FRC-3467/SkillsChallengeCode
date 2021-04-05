@@ -13,7 +13,6 @@ public class DeployHood extends InstantCommand {
   ShooterSubsystem m_shooter;
   public DeployHood(ShooterSubsystem shooter) {
     m_shooter = shooter;
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

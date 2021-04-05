@@ -15,10 +15,10 @@ package frc.robot;
 public final class Constants {
     public static final class CanConstants{
         // drivebase
-        public static final int left_drivebase_1 = 2;
-        public static final int left_drivebase_2 = 3;
-        public static final int right_drivebase_1 = 4;
-        public static final int right_drivebase_2 = 5;  
+        public static final int left_drivebase_1 = 4;
+        public static final int left_drivebase_2 = 5;
+        public static final int right_drivebase_1 = 2;
+        public static final int right_drivebase_2 = 3; 
         //Intake  
         public static final int intakeMotor = 6;
         //VHopper
@@ -57,17 +57,18 @@ public final class Constants {
         public static final int kOperatorControllerPort = 1;
     }
     public static final class ShooterConstants{
-    // Shooter Velocity Tolerance
+        // Shooter Velocity Tolerance
         public static final int kShooterTolerance = 300;
+        //double _kP, double _kI, double _kD, double _kF, int _kIzone, double _kPeakOutput
         public static final Gains kGains_Falcon = new Gains( 0.25, 0.0, 0.0, 0.0475, 0,  1.00);
 		
         //Velocities used for shooter
-        public static double kTestVelocity = 1000;
+        public static double kTestVelocity = 3060.0;
         
-        public static final Double GreenVelocity = null;
-		public static final Double YellowVelocity = null;
-		public static final Double BlueVelocity = null;
-		public static final Double RedVelocity = null; 
+        public static final Double kGreenVelocity = 3000.0;
+		public static final Double kYellowVelocity = 3000.0;
+		public static final Double kBlueVelocity = 3000.0;
+		public static final Double kRedVelocity = 3000.0; 
     }
     public static final class PneumaticConstants {
         //Intake Pistons
