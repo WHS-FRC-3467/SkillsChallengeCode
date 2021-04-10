@@ -69,33 +69,36 @@ public class RobotContainer {
 
         //Retract intake
         new XboxControllerButton(m_driverController, XboxController.Button.kBumperRight)
-        .whileActiveContinuous(new InstantCommand(m_intake::deployIntake, m_intake));
+        .whileActiveContinuous(new InstantCommand(m_intake::retractIntake, m_intake));
         
         //Opperator Controller
 
-        //runs shooter at test velocity
+        //green velocity
         new XboxControllerButton(m_operatorController, XboxController.Button.kA)
         .whileHeld(new RunShooter(m_shooter, ShooterConstants.kGreenVelocity)); 
-      
-        new XboxControllerButton(m_operatorController, XboxController.Button.kB)
-        .whileHeld(new RunShooter(m_shooter, ShooterConstants.kYellowVelocity)); 
-        
+        // yellow velocity
         new XboxControllerButton(m_operatorController, XboxController.Button.kY)
-        .whileHeld(new RunShooter(m_shooter, ShooterConstants.kBlueVelocity)); 
-        
-        new XboxControllerButton(m_operatorController, XboxController.Button.kX)
         .whileHeld(new RunShooter(m_shooter, ShooterConstants.kYellowVelocity)); 
+        //blue velocity
+        new XboxControllerButton(m_operatorController, XboxController.Button.kX)
+        .whileHeld(new RunShooter(m_shooter, ShooterConstants.kBlueVelocity)); 
+        //red
+        new XboxControllerButton(m_operatorController, XboxController.Button.kB)
+        .whileHeld(new RunShooter(m_shooter, ShooterConstants.kRedVelocity)); 
         
+        //run ball tower up
         new XboxControllerButton(m_operatorController, XboxController.Button.kBumperLeft)
         .whileHeld(new RunBallTower(m_shooter, 50.0)); 
         
+        //run ball tower down
         new XboxControllerButton(m_operatorController, XboxController.Button.kBumperRight)
         .whileHeld(new RunBallTower(m_shooter, -50.0)); 
         
-        
+        // hood out
 	    	new XBoxControllerDPad(m_operatorController, XboxController.DPad.kDPadUp)
         .whileActiveContinuous(new InstantCommand(m_shooter::deployHood, m_shooter)); 
         
+        //hood in
 	    	new XBoxControllerDPad(m_operatorController, XboxController.DPad.kDPadDown)
         .whileActiveContinuous(new InstantCommand(m_shooter::retractHood, m_shooter)); 
   }

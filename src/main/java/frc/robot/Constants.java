@@ -58,17 +58,18 @@ public final class Constants {
     }
     public static final class ShooterConstants{
         // Shooter Velocity Tolerance
+     
         public static final int kShooterTolerance = 300;
         //double _kP, double _kI, double _kD, double _kF, int _kIzone, double _kPeakOutput
-        public static final Gains kGains_Falcon = new Gains( 0.25, 0.0, 0.0, 0.0475, 0,  1.00);
+        public static final Gains kGains_Falcon = new Gains( 0.35, 0.0, 0.0, 0.0525, 0,  1.00);
 		
         //Velocities used for shooter
         public static double kTestVelocity = 3060.0;
         
-        public static final Double kGreenVelocity = 3000.0;
-		public static final Double kYellowVelocity = 3000.0;
-		public static final Double kBlueVelocity = 3000.0;
-		public static final Double kRedVelocity = 3000.0; 
+        public static final Double kGreenVelocity = 1850.0;
+		public static final Double kYellowVelocity = 2370.0;
+		public static final Double kBlueVelocity = 2500.0;
+		public static final Double kRedVelocity = 2750.0; 
     }
     public static final class PneumaticConstants {
         //Intake Pistons
