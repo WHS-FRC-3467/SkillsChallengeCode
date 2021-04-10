@@ -11,7 +11,6 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import frc.robot.RobotContainer;
 
 /**
  * A command to drive the robot with joystick input (passed in as {@link DoubleSupplier}s). Written explicitly for pedagogical purposes - actual code should
@@ -46,13 +45,8 @@ public class SplitArcadeDrive extends CommandBase
     {
         // Use Slew Rate Limiter to calculate moderated values before calling arcadeDrive
         // Take the negative of the "forward" value, because the joystick Y-axis is negative in the "forward" direction.
-        if (RobotContainer.m_driverController.getRawButton(5)){
-            System.out.println("SLOW");
-            m_drive.arcadeDrive(((-1) * m_forward.getAsDouble())/4, (m_rotation.getAsDouble())/4);
-        }
-        else{ 
-            m_drive.arcadeDrive((-1) * m_forward.getAsDouble(), (0.8) * m_rotation.getAsDouble());
-        }
+        m_drive.arcadeDrive((( m_forward.getAsDouble()) * 0.75), (-(m_rotation.getAsDouble())* 0.75));
+        
     }
 
 }

@@ -22,10 +22,11 @@ public class IntakeSubsystem extends SubsystemBase {
   private TalonSRX m_vHopper2 = new TalonSRX(CanConstants.vHopperMotor2);
 
   // Intake Deploy/Retract solenoids
-   public DoubleSolenoid m_intakePiston = new DoubleSolenoid(PneumaticConstants.kIntakePistonDeploy, PneumaticConstants.kIntakePistonRetract);
+  private DoubleSolenoid m_intakePiston;
 
   public IntakeSubsystem() 
   {
+    m_intakePiston = new DoubleSolenoid(PneumaticConstants.kIntakePistonDeploy, PneumaticConstants.kIntakePistonRetract);
     m_vHopper2.setInverted(true);
     m_vHopper2.follow(m_vHopper1);
   }

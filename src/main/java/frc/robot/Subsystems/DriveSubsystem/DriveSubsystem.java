@@ -48,12 +48,7 @@ public class DriveSubsystem extends SubsystemBase
         // Configure Falcons to use integrated encoder
         m_leftTalon1.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
         m_rightTalon1.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
-
-        m_leftTalon1.setInverted(true);
-        m_leftTalon2.setInverted(true);
-        m_rightTalon1.setInverted(true);
-        m_rightTalon2.setInverted(true);
-
+        
         m_leftTalon1.configOpenloopRamp(0.4);
         m_leftTalon2.configOpenloopRamp(0.4);        
         m_rightTalon2.configOpenloopRamp(0.4);        

@@ -26,14 +26,23 @@ public class ProcessBalls extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.driveIntake(m_speed.getAsDouble());
-    m_intake.driveVHopper(m_speed.getAsDouble());
+    if(m_speed.getAsDouble() > 0.9){
+      m_intake.driveIntake(-m_speed.getAsDouble());
+      m_intake.driveVHopper(-m_speed.getAsDouble());
+    }
+    else if (m_speed.getAsDouble() > -0.9){
+      m_intake.driveIntake(-m_speed.getAsDouble());
+      m_intake.driveVHopper(-m_speed.getAsDouble());
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_intake.driveIntake(0.0);
+    m_intake.driveVHopper(0.0);
+
   }
 
   // Returns true when the command should end.

@@ -5,6 +5,7 @@
 package frc.robot.Subsystems.Shooter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Gains;
+import frc.robot.Constants.CanConstants;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -19,17 +21,21 @@ public class ShooterSubsystem extends SubsystemBase {
     FalconVelocity m_speedControl;
     public ShooterSubsystem m_shooter;
     
-    private DoubleSolenoid m_hood = new DoubleSolenoid(Constants.PneumaticConstants.kHoodDeploy, Constants.PneumaticConstants.kHoodRetract);
+    private DoubleSolenoid m_hood;
+
+    private static TalonSRX m_ballTowerMotor = new TalonSRX(CanConstants.ballTowerMotor);
 
     
     public ShooterSubsystem()
     {
+        m_hood = new DoubleSolenoid(Constants.PneumaticConstants.kHoodDeploy, Constants.PneumaticConstants.kHoodRetract);
         m_speedControl = new FalconVelocity();
         m_speedGains = ShooterConstants.kGains_Falcon;
         
         /* Initialize Smart Dashboard display */
         SmartDashboard.putNumber("P Gain", m_speedGains.kP);
         SmartDashboard.putNumber("Feed Forward", m_speedGains.kF);
+        SmartDashboard.putNumber("Target Velocity", 0.0);
 
         SmartDashboard.putNumber("Current Velocity", 0);
         SmartDashboard.putNumber("Current Output Percent", 0);
@@ -119,6 +125,10 @@ public class ShooterSubsystem extends SubsystemBase {
     public boolean isHoodDeployed()
     {
         return m_hood.get() == Value.kForward;
+    }
+
+    public void runBallTower (Double speed){
+        m_ballTowerMotor.set(ControlMode.PercentOutput, speed);
     }
 
 }

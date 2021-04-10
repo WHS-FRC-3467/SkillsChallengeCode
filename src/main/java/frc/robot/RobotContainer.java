@@ -5,18 +5,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Subsystems.BallTower.BallTowerSubsystem;
-import frc.robot.Subsystems.BallTower.RunBallTower;
 import frc.robot.Subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.Subsystems.DriveSubsystem.SplitArcadeDrive;
-import frc.robot.Subsystems.Intake.DeployIntake;
 import frc.robot.Subsystems.Intake.IntakeSubsystem;
 import frc.robot.Subsystems.Intake.ProcessBalls;
-import frc.robot.Subsystems.Intake.RetractIntake;
-import frc.robot.Subsystems.Shooter.DeployHood;
-import frc.robot.Subsystems.Shooter.RetractHood;
+import frc.robot.Subsystems.Shooter.RunBallTower;
 import frc.robot.Subsystems.Shooter.RunShooter;
 import frc.robot.Subsystems.Shooter.ShooterSubsystem;
 import frc.robot.control.XBoxControllerDPad;
@@ -35,7 +31,6 @@ public class RobotContainer {
 
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final IntakeSubsystem m_intake = new IntakeSubsystem();
-  private final BallTowerSubsystem m_ballTower = new BallTowerSubsystem();
   private final ShooterSubsystem m_shooter = new ShooterSubsystem();
 
   public static XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -56,7 +51,7 @@ public class RobotContainer {
                             () -> m_driverController.getRightX()));
 
     m_intake.setDefaultCommand(new ProcessBalls(m_intake, 
-                                                () -> m_operatorController.getLeftTrigger()));
+                                                () -> m_operatorController.getLeftY()));
   }
 
   /**
@@ -70,26 +65,42 @@ public class RobotContainer {
         //Driver Controller
         //Deploy intake
         new XboxControllerButton(m_driverController, XboxController.Button.kBumperLeft)
-        .whenPressed(new DeployIntake(m_intake));
+        .whileActiveContinuous(new InstantCommand(m_intake::deployIntake, m_intake));
 
         //Retract intake
         new XboxControllerButton(m_driverController, XboxController.Button.kBumperRight)
-        .whenPressed(new RetractIntake(m_intake));
- 
+        .whileActiveContinuous(new InstantCommand(m_intake::retractIntake, m_intake));
+        
         //Opperator Controller
 
-        //runs shooter at test velocity
+        //green velocity
         new XboxControllerButton(m_operatorController, XboxController.Button.kA)
-        .whileHeld(new RunShooter(m_shooter, ShooterConstants.kTestVelocity)); 
+        .whileHeld(new RunShooter(m_shooter, ShooterConstants.kGreenVelocity)); 
+        // yellow velocity
+        new XboxControllerButton(m_operatorController, XboxController.Button.kY)
+        .whileHeld(new RunShooter(m_shooter, ShooterConstants.kYellowVelocity)); 
+        //blue velocity
+        new XboxControllerButton(m_operatorController, XboxController.Button.kX)
+        .whileHeld(new RunShooter(m_shooter, ShooterConstants.kBlueVelocity)); 
+        //red
+        new XboxControllerButton(m_operatorController, XboxController.Button.kB)
+        .whileHeld(new RunShooter(m_shooter, ShooterConstants.kRedVelocity)); 
         
+        //run ball tower up
+        new XboxControllerButton(m_operatorController, XboxController.Button.kBumperLeft)
+        .whileHeld(new RunBallTower(m_shooter, 50.0)); 
+        
+        //run ball tower down
         new XboxControllerButton(m_operatorController, XboxController.Button.kBumperRight)
-        .whenPressed(new RunBallTower(m_ballTower, 70.0));
+        .whileHeld(new RunBallTower(m_shooter, -50.0)); 
         
+        // hood out
 	    	new XBoxControllerDPad(m_operatorController, XboxController.DPad.kDPadUp)
-        .whileActiveOnce(new DeployHood(m_shooter)); 
+        .whileActiveContinuous(new InstantCommand(m_shooter::deployHood, m_shooter)); 
         
-	    	new XBoxControllerDPad(m_operatorController, XboxController.DPad.kDPadUp)
-        .whileActiveOnce(new RetractHood(m_shooter)); 
+        //hood in
+	    	new XBoxControllerDPad(m_operatorController, XboxController.DPad.kDPadDown)
+        .whileActiveContinuous(new InstantCommand(m_shooter::retractHood, m_shooter)); 
   }
 
   /**
