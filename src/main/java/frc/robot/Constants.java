@@ -29,6 +29,8 @@ public final class Constants {
         //Shooter
         public static final int shooterMotor1 = 10;
         public static final int shooterMotor2 = 11;
+        public static final int shooterGateMotor = 12;
+        public static final int climberMotor = 13;
     }
     public static final class DriveConstants{
         // encoder ports
@@ -65,6 +67,7 @@ public final class Constants {
 		
         //Velocities used for shooter
         public static double kTestVelocity = 3060.0;
+		public static double kShooterGateSpeed = 0.5;
         
         public static final Double kGreenVelocity = 1850.0;
 		public static final Double kYellowVelocity = 2370.0;
@@ -94,3 +97,4 @@ public final class Constants {
     }
 
 }
+ 

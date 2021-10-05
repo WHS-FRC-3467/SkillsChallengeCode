@@ -109,7 +109,7 @@ public class DriveSubsystem extends SubsystemBase
      *
      * @return the left drive encoder value
      */
-    public int getLeftEncoderValue()
+    public double getLeftEncoderValue()
     {
         return m_leftTalon1.getSelectedSensorPosition();
     }
@@ -119,7 +119,7 @@ public class DriveSubsystem extends SubsystemBase
      *
      * @return the right drive encoder value
      */
-    public int getRightEncoderValue()
+    public double getRightEncoderValue()
     {
         return m_rightTalon1.getSelectedSensorPosition();
     }
